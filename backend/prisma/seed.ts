@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Insert 3 cameras
-  const cameras = await prisma.camera.createMany({
+  await prisma.camera.createMany({
     data: [
       { name: 'Shop Floor A', location: 'First Floor' },
       { name: 'Vault', location: 'Basement' },

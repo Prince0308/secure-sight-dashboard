@@ -2,7 +2,7 @@
 'use client';
 import { ReactNode } from 'react';
 
-import { useState } from 'react';
+
 import Image from 'next/image';
 import { FaVideo, FaUsers, FaMapMarkerAlt, FaBell, FaThLarge } from 'react-icons/fa';
 
@@ -11,7 +11,7 @@ export default function Navbar() {
     <nav className="w-full h-16 bg-[#1E1E1E] text-white flex items-center justify-between px-6 shadow-md">
       {/* Left: Logo & App Name */}
       <div className="flex items-center gap-3">
-        <Image src="/logo.svg" alt="Logo" width={32} height={32} />
+        <Image src="/MANDLACX.png" alt="Logo" width={32} height={32} />
         <span className="text-lg font-semibold">MANDLACX</span>
       </div>
 

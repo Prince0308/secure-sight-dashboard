@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface Incident {
   id: number;
@@ -30,8 +31,12 @@ export default function IncidentList() {
 
   async function resolveIncident(id: number) {
     try {
-      const res = await fetch(`/api/incidents/${id}/resolve`, {
+      const res = await fetch(`/api/incidents`, {
         method: "PATCH",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
       });
 
       if (!res.ok) {
@@ -59,9 +64,11 @@ export default function IncidentList() {
             key={incident.id}
             className="flex items-center gap-4 bg-zinc-800 p-3 rounded-lg"
           >
-            <img
+            <Image
               src={incident.thumbnailUrl}
               alt="Incident thumbnail"
+              width={64}
+              height={64}
               className="w-16 h-16 rounded object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = "/thumbnails/placeholder.jpg";

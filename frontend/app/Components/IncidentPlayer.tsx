@@ -23,13 +23,28 @@ export default function IncidentPlayer() {
 
   useEffect(() => {
     // Fetch the latest incident (unresolved) to display in player
-    fetch('/api/incidents?resolved=false')
+    fetch('/api/incidents')
       .then(res => res.json())
       .then(data => {
         if (data.length > 0) {
           setIncident(data[0]); // Show the most recent one
         }
       });
+  }, []);
+
+  // Refresh incident player every 30 seconds to show new incidents
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch('/api/incidents')
+        .then(res => res.json())
+        .then(data => {
+          if (data.length > 0) {
+            setIncident(data[0]);
+          }
+        });
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
   if (!incident) {

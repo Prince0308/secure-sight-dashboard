@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Secure Sight Dashboard
 
-## Getting Started
+A comprehensive security monitoring dashboard built with Next.js and modern web technologies.
 
-First, run the development server:
+## Project Structure
+
+This is a monorepo containing:
+
+- **`frontend/`** - Next.js 15 application with React 19 and Tailwind CSS
+- **`backend/`** - Prisma-based backend with SQLite database
+
+## Quick Start
+
+### Development
 
 ```bash
+# Install all dependencies
+npm run install:all
+
+# Start frontend development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Or start individual services
+cd frontend && npm run dev
+cd backend && npm run seed
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Production Build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Build frontend for production
+npm run build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Start production server
+npm start
+```
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
+### Vercel Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is configured for Vercel deployment with the following setup:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Root `vercel.json`** - Configures deployment from the `frontend/` directory
+- **Frontend `vercel.json`** - Additional frontend-specific configuration
+- **Monorepo structure** - Properly organized for deployment
 
-## Deploy on Vercel
+#### Deployment Steps:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Push to GitHub** - Ensure your code is in a GitHub repository
+2. **Connect to Vercel** - Import your repository in Vercel
+3. **Automatic Detection** - Vercel will detect Next.js and use the root `vercel.json`
+4. **Deploy** - Vercel will build and deploy from the `frontend/` directory
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### Configuration Details:
+
+- **Build Command**: `cd frontend && npm install && npm run build`
+- **Output Directory**: `frontend/.next`
+- **Framework**: Next.js
+- **Install Command**: `cd frontend && npm install`
+
+### Environment Variables
+
+No environment variables are required for the current setup as the frontend uses mock data.
+
+## Features
+
+- 🎥 Real-time security incident monitoring
+- 📊 Interactive dashboard with incident timeline
+- 🎨 Modern, responsive UI with Tailwind CSS
+- ⚡ Fast performance with Next.js 15
+- 🎯 TypeScript for type safety
+- 🔧 Mock API for development and demo
+
+## Tech Stack
+
+### Frontend
+- **Framework**: Next.js 15.4.3
+- **React**: 19.1.0
+- **Styling**: Tailwind CSS 4
+- **Icons**: React Icons
+- **Language**: TypeScript
+
+### Backend
+- **Database**: SQLite with Prisma
+- **Language**: TypeScript
+- **ORM**: Prisma Client
+
+## License
+
+MIT

@@ -12,10 +12,12 @@ interface Incident {
 
 export default function IncidentList() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [isResolving, setIsResolving] = useState<number | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     async function fetchIncidents() {
-      const res = await fetch("/api/incidents?resolved=false");
+      const res = await fetch("/api/incidents");
 
       if (!res.ok) {
         console.error("Failed to fetch incidents:", res.status, await res.text());
@@ -27,9 +29,15 @@ export default function IncidentList() {
     }
 
     fetchIncidents();
+
+    // Refresh incidents every 45 seconds to show new ones
+    const interval = setInterval(fetchIncidents, 45000);
+
+    return () => clearInterval(interval);
   }, []);
 
   async function resolveIncident(id: number) {
+    setIsResolving(id);
     try {
       const res = await fetch(`/api/incidents`, {
         method: "PATCH",
@@ -44,20 +52,34 @@ export default function IncidentList() {
         return;
       }
 
-      // Optimistically update UI
-      setIncidents((prev) =>
-        prev.map((inc) =>
-          inc.id === id ? { ...inc, resolved: true } : inc
-        )
-      );
+      const data = await res.json();
+      
+      // Remove the resolved incident and add the new one
+      setIncidents((prev) => {
+        const filtered = prev.filter((inc) => inc.id !== id);
+        return [data.newIncident, ...filtered];
+      });
+
+      // Show success message
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error("Error resolving incident:", error);
+    } finally {
+      setIsResolving(null);
     }
   }
 
   return (
     <div className="bg-zinc-900 rounded-xl p-4 h-full w-full overflow-y-auto">
       <h2 className="text-xl font-semibold mb-4 text-white">Incident List</h2>
+      
+      {showSuccess && (
+        <div className="mb-4 p-3 bg-green-600 text-white rounded-lg text-sm">
+          ✅ Incident resolved! New incident generated.
+        </div>
+      )}
+      
       <ul className="space-y-3">
         {incidents.map((incident) => (
           <li
@@ -90,9 +112,14 @@ export default function IncidentList() {
               {!incident.resolved && (
                 <button
                   onClick={() => resolveIncident(incident.id)}
-                  className="mt-2 bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-sm"
+                  disabled={isResolving === incident.id}
+                  className={`mt-2 px-2 py-1 rounded text-sm ${
+                    isResolving === incident.id
+                      ? 'bg-gray-500 cursor-not-allowed'
+                      : 'bg-green-600 hover:bg-green-700'
+                  } text-white`}
                 >
-                  Mark Resolved
+                  {isResolving === incident.id ? 'Resolving...' : 'Mark Resolved'}
                 </button>
               )}
             </div>
